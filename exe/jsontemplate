@@ -1,0 +1,21 @@
+#!/usr/bin/ruby
+
+require 'jsontemplate'
+
+def process_json(src)
+    t = JsonTemplate.new(src)
+    t.process_dict
+end
+
+src  = File.expand_path(ARGV.shift) rescue nil
+dest = File.expand_path(ARGV.shift) rescue nil
+
+if src.nil? || dest.nil?
+    STDERR.puts "USAGE: jsontemplate in-file out-file"
+    exit(1)
+end
+
+File.open(dest,"w") do |f|
+    f.write(process_json(src).to_json)
+end
+
