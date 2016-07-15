@@ -7,7 +7,7 @@ build: container
 	rm -f pkg/*
 	${BE} rake build
 
-push: build
+push: build spec
 	gem push `/bin/ls -q pkg/* | tail -n1`
 
 container: Dockerfile
@@ -33,4 +33,3 @@ cli:
 
 pry:
 	${BE} pry -r bundler/setup -r jsontemplate
-
