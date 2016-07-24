@@ -11,7 +11,22 @@ describe JsonTemplate do
     expect(JsonTemplate.new(StringIO.new(basicjson)).process_dict).to eq(JSON.load(basicjson))
   end
 
-  it 'allows key lookup and expansion from another JSON file' do
-    expect(JsonTemplate.new(StringIO.new('{"foo": {"$FLookup": ["parameters.json","key1"]}}')).process_dict).to eq({"foo" => "value1"})
+  describe '$Flookup' do
+    it 'allows key lookup and expansion from another JSON file' do
+      expect(JsonTemplate.new(StringIO.new('{"foo": {"$FLookup": ["parameters.json","key1"]}}')).process_dict).to eq({"foo" => "value1"})
+    end
   end
+
+  describe '$Prop' do
+    it 'allows key lookup and expansion from a specified properties file' do
+      expect(JsonTemplate.new(StringIO.new('{"foo": {"$Prop": "key1"}}')).process_dict).to eq({"foo" => "value1"})
+    end
+  end
+
+  describe '$Secret' do
+    it 'allows key lookup and expansion from a specified "secret" properties file' do
+      expect(JsonTemplate.new(StringIO.new('{"foo": {"$Secret": "password"}}')).process_dict).to eq({"foo" => "pre$ident"})
+    end
+  end
+
 end

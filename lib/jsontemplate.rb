@@ -3,11 +3,15 @@ require "jsontemplate/version"
 
 class JsonTemplate
     attr_reader :json
+    attr_accessor :properties_file, :secrets_file
 
     def initialize(src, path=nil)
         path ||= src.kind_of?(String) ? src : nil
         @path = path || (src.respond_to?(:path) ? src.path : nil)
         @dir  = File.expand_path(path ? File.dirname(path) : ".")
+
+        @properties_file = File.join(@dir,"properties.json")
+        @secrets_file = File.join(@dir,"secrets.json")
 
         data = src.respond_to?(:read) ? src.read : File.read(src)
         @json = JSON.load(data)
@@ -39,6 +43,10 @@ class JsonTemplate
                 process_dirmerge(v)
             elsif k == "$FLookup"
                 process_flookup(*v)
+            elsif k == "$Prop"
+                process_flookup(@properties_file, v)
+            elsif k == "$Secret"
+                process_flookup(@secrets_file, v)
             elsif k[0] == "$"
                 raise "Unknown directive #{k}"
             else
