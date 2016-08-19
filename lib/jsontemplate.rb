@@ -10,14 +10,15 @@ class JsonTemplate
         @path = path || (src.respond_to?(:path) ? src.path : nil)
         @dir  = File.expand_path(path ? File.dirname(path) : ".")
 
-        @properties_file = File.join(@dir,"properties.json")
-        @secrets_file    = File.join(@dir,"secrets.json")
+        @properties_file = "properties.json"
+        @secrets_file    = "secrets.json"
 
         if src.respond_to?(:read)
           @filename = "<stream>"
           data = src.read
         else
-          @filename = File.join(@dir, File.basename(src))
+          @filename = src[0] == ?/ ? src : File.join(@dir, File.basename(src))
+          p [src, @path, @dir, @filename]
           data = File.read(@filename)
         end
         @json = JSON.load(data)
@@ -26,6 +27,7 @@ class JsonTemplate
     def process_dirmerge(pattern)
         files = Dir.glob(@dir+"/"+pattern)
         files.collect do |path|
+        p path
             r = JsonTemplate.new(path,@path).process_dict
             key=File.basename(path).split(".")[0..-2].join(".")
             [key, r]

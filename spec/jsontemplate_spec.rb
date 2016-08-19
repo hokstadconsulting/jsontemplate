@@ -41,5 +41,10 @@ describe JsonTemplate do
       expect(JsonTemplate.new(StringIO.new('{"foo": {"$Secret": "password"}}')).process_dict).to eq({"foo" => "pre$ident"})
     end
   end
-
+  
+  describe '$DirMerge' do
+    it 'merges the contents of a subdirectory' do
+      expect(JsonTemplate.new("spec/fixtures/files/dirmerge.json").process).to eq({"subfile"=>{"SomeKey1"=>"SomeValue"}, "subfile2"=>{"SomeKey2"=>"SomeValue"}})
+    end
+  end
 end
