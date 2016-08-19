@@ -21,16 +21,13 @@ describe JsonTemplate do
     end
   end
 
-  describe '$Flookup' do
-    it 'can be nested within an array' do
-      expect(JsonTemplate.new(StringIO.new('{"foo": [{"$FLookup": ["parameters.json","key1"]}]}')).process_dict).to eq({"foo" => ["value1"]})
-    end
+
+  it 'can be nested within an array' do
+    expect(JsonTemplate.new(StringIO.new('{"foo": [{"$FLookup": ["parameters.json","key1"]}]}')).process_dict).to eq({"foo" => ["value1"]})
   end
 
-  describe '$Flookup' do
-    it 'can be nested within an array multiple times' do
-      expect(JsonTemplate.new(StringIO.new('{"foo": [[{"$FLookup": ["parameters.json","key1"]}]]}')).process_dict).to eq({"foo" => [["value1"]]})
-    end
+  it 'can be nested within an array multiple times' do
+    expect(JsonTemplate.new(StringIO.new('{"foo": [[{"$FLookup": ["parameters.json","key1"]}]]}')).process_dict).to eq({"foo" => [["value1"]]})
   end
 
   describe '$Prop' do
