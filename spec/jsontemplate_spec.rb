@@ -15,6 +15,10 @@ describe JsonTemplate do
     it 'allows key lookup and expansion from another JSON file' do
       expect(JsonTemplate.new(StringIO.new('{"foo": {"$FLookup": ["parameters.json","key1"]}}')).process_dict).to eq({"foo" => "value1"})
     end
+
+    it 'uses the base path of the original JSON file as the base path for lookup of the parameter expansion' do
+      expect(JsonTemplate.new("spec/fixtures/files/flookup.json").process).to eq({"foo" => "value1"})
+    end
   end
 
   describe '$Flookup' do

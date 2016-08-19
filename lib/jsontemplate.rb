@@ -11,9 +11,15 @@ class JsonTemplate
         @dir  = File.expand_path(path ? File.dirname(path) : ".")
 
         @properties_file = File.join(@dir,"properties.json")
-        @secrets_file = File.join(@dir,"secrets.json")
+        @secrets_file    = File.join(@dir,"secrets.json")
 
-        data = src.respond_to?(:read) ? src.read : File.read(src)
+        if src.respond_to?(:read)
+          @filename = "<stream>"
+          data = src.read
+        else
+          @filename = File.join(@dir, File.basename(src))
+          data = File.read(@filename)
+        end
         @json = JSON.load(data)
     end
 
