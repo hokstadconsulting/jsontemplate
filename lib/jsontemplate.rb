@@ -31,17 +31,26 @@ class JsonTemplate
         map[v]
     end
 
+    def process_array(root)
+        root.collect do |v|
+           process(v)
+        end
+    end
+
+    def process(root=nil)
+        root ||= @json
+        return process_dict(root) if root.is_a?(Hash)
+        return process_array(root) if root.is_a?(Array)
+        return root
+    end
+
     def process_dict(root=nil)
         root ||= @json
 
-        return root if !root.is_a?(Hash) && !root.is_a?(Array)
+        return process(root) if !root.is_a?(Hash) # Backwards compat hack
 
         pairs = root.collect do |k,v|
-            if v.is_a?(Hash)
-                v = process_dict(v)
-            elsif v.is_a?(Array)
-                v = v.collect {|v_| process_dict(v_)}
-            end
+            v = process(v)
 
             if k == "$DirMerge"
                 process_dirmerge(v)
