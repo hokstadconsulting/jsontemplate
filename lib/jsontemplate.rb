@@ -18,7 +18,6 @@ class JsonTemplate
           data = src.read
         else
           @filename = src[0] == ?/ ? src : File.join(@dir, File.basename(src))
-          p [src, @path, @dir, @filename]
           data = File.read(@filename)
         end
         @json = JSON.load(data)
