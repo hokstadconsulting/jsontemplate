@@ -26,7 +26,6 @@ class JsonTemplate
     def process_dirmerge(pattern)
         files = Dir.glob(@dir+"/"+pattern)
         files.collect do |path|
-        p path
             r = JsonTemplate.new(path,@path).process_dict
             key=File.basename(path).split(".")[0..-2].join(".")
             [key, r]
