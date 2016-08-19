@@ -17,6 +17,12 @@ describe JsonTemplate do
     end
   end
 
+  describe '$Flookup' do
+    it 'can be nested within an array' do
+      expect(JsonTemplate.new(StringIO.new('{"foo": [{"$FLookup": ["parameters.json","key1"]}]}')).process_dict).to eq({"foo" => ["value1"]})
+    end
+  end
+
   describe '$Prop' do
     it 'allows key lookup and expansion from a specified properties file' do
       expect(JsonTemplate.new(StringIO.new('{"foo": {"$Prop": "key1"}}')).process_dict).to eq({"foo" => "value1"})

@@ -34,9 +34,13 @@ class JsonTemplate
     def process_dict(root=nil)
         root ||= @json
 
+        return root if !root.is_a?(Hash) && !root.is_a?(Array)
+
         pairs = root.collect do |k,v|
             if v.is_a?(Hash)
                 v = process_dict(v)
+            elsif v.is_a?(Array)
+                v = v.collect {|v_| process_dict(v_)}
             end
 
             if k == "$DirMerge"
